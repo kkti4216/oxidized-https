@@ -1,0 +1,55 @@
+version: "3"
+services:
+  oxidized:
+    image: kkti4216/oxidized:dev
+    restart: always
+    user: root:root
+    environment:
+      CONFIG_RELOAD_INTERVAL: 60
+      OXIDIZED_HOME: /etc/oxidized
+      OXIDIZED_LOGS: /var/log/oxidized
+    volumes:
+      - type: volume
+        source: oxidized-output
+        target: /var/lib/oxidized/devices.git
+        volume:
+          nocopy: true
+      - type: bind
+        source: ./oxidized/source
+        target: /etc/oxidized/source/
+      - type: bind
+        source: ./oxidized/config
+        target: /etc/oxidized/config
+      # - typ: bind
+      #   source: /etc/timezone
+      #   target: /etc/timezone
+      #   readonly: true
+    command: oxidized
+
+  https-portal:
+    image: steveltn/https-portal:1.22
+    ports:
+      - '80:80'
+      - '443:443'
+    restart: always
+    environment:
+      DOMAINS: 'admin:VERY_STRONG_PASSWORD@your.org.domain -> http://oxidized:8888'
+      STAGE: 'local'
+      LISTEN_IPV6: 'true'
+      ERROR_LOG: default
+      ACCESS_LOG: default
+      #      FORCE_RENEW: 'true'
+    volumes:
+      - /data/ssl_certs:/var/lib/https-portal
+
+networks:
+  default:
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: fd00::/64
+          gateway: fd00::1
+
+volumes:
+  oxidized-output:
+
