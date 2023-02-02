@@ -20,10 +20,7 @@ services:
       - type: bind
         source: ./oxidized/config
         target: /etc/oxidized/config
-      # - typ: bind
-      #   source: /etc/timezone
-      #   target: /etc/timezone
-      #   readonly: true
+      - /etc/localtime:/etc/localtime:ro
     command: oxidized
 
   https-portal:
@@ -41,7 +38,7 @@ services:
       #      FORCE_RENEW: 'true'
     volumes:
       - /data/ssl_certs:/var/lib/https-portal
-
+      - /etc/localtime:/etc/localtime:ro
 networks:
   default:
     enable_ipv6: true
