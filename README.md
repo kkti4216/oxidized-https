@@ -3,8 +3,10 @@
 - ipv6 support
 
 ## usage
+0. set up for docker-ipv6
 1. make `router.db`
 ```
+mkdir oxidized/source
 echo "sw01;10.0.0.1;ios;group1;user;password;diffie-hellman-group1-sha1;enablepassword" > ./oxidized/source/router.db
 ```
 2. deploy
